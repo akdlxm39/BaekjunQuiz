@@ -5,9 +5,10 @@ using namespace std;
 int arr[500001];
 int temp[500001];
 int save[500001];
-int iter = 0;
+int iter = 1;
+int ans = -1;
 
-void merge(int start, int mid, int end) {
+void merge(int start, int mid, int end, int K) {
 	int i = start;
 	int j = mid + 1;
 	int k = start;
@@ -21,16 +22,19 @@ void merge(int start, int mid, int end) {
 		temp[k++] = arr[i++];
 	while (j <= end)
 		temp[k++] = arr[j++];
-	for (int n = start; n <= end; n++)
+	for (int n = start; n <= end; n++){
 		arr[n] = temp[n];
+		if (iter++ == K) ans = arr[n];
+	}
+		
 }
 
-void mergeSort(int start, int end) {
+void mergeSort(int start, int end, int K) {
 	if (start >= end) return;
 	int mid = (start + end) / 2;
-	mergeSort(start, mid);
-	mergeSort(mid + 1, end);
-	merge(start, mid, end);
+	mergeSort(start, mid, K);
+	mergeSort(mid + 1, end, K);
+	merge(start, mid, end, K);
 }
 
 int main() {
@@ -39,7 +43,8 @@ int main() {
 	int N, K; cin >> N >> K;
 	for(int i = 0; i < N; ++i)
 		cin >> arr[i];
-    
+	mergeSort(0, N - 1, K);
+    cout << ans;
 
     return 0;
 }
